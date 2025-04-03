@@ -5,9 +5,9 @@
 GestureFaceDetection is a sensor capable of tracking human head and shoulders and detecting five types of gestures from up to 3 meters away.
    
    
-![正反面svg效果图](https://github.com/DFRobot/DFRobot_GestureFaceDetection/raw/master/resources/images/SEN0626svg.png)
+![正反面svg效果图](./resources/images/SEN0626svg.png)
 
-## Product Link（https://www.dfrobot.com/)
+## Product Link（https://www.dfrobot.com/product-2914.html)
     SEN0626:Gesture Sensor 
 
 ## Table of Contents
@@ -198,5 +198,5 @@ Raspberry Pi      |      √       |              |             |
 - Date 2025-03-17
 - Version V1.0
 ## Credits
-Written by thdyyl(yuanlong.yu@dfrobot.com), 2025.03.17 (Welcome to our [website](https://www.dfrobot.com/product-2914.html))
+Written by thdyyl(yuanlong.yu@dfrobot.com), 2025.03.17 (Welcome to our [website](https://www.dfrobot.com/))
 ## History

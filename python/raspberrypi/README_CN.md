@@ -7,7 +7,7 @@ GestureFaceDetection是一款可以在最远3米距离跟踪人体头肩和检�
 ![Product Image](../../resources/images/SEN0626svg.png)
 
 
-## 产品链接（https://www.dfrobot.com.cn/)
+## 产品链接（https://www.dfrobot.com/product-2914.html)
 
   SEN0626:手势识别传感器
 
@@ -143,7 +143,7 @@ python get_pid_vid.py
 
 ## 贡献者
 
-Written by thdyyl(yuanlong.yu@dfrobot.com), 2025.03.17 (Welcome to our [website](https://www.dfrobot.com/product-2914.html))
+Written by thdyyl(yuanlong.yu@dfrobot.com), 2025.03.17 (Welcome to our [website](https://www.dfrobot.com/))
 
 
 

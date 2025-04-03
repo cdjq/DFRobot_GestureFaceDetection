@@ -2,7 +2,7 @@
  *@file DFRobot_GestureFaceDetection.cpp
  *@brief Define the basic structure of class DFRobot_GestureFaceDetection, the implementation of basic methods.
  *@details this module is used to identify the information in the QR code
- *@copyright   Copyright (c) 2024 DFRobot Co.Ltd (http://www.dfrobot.com)
+ *@copyright   Copyright (c) 2025 DFRobot Co.Ltd (http://www.dfrobot.com)
  *@License     The MIT License (MIT)
  *@author [thdyyl](yuanlong.yu@dfrobot.com)
  *@version  V1.0
@@ -13,6 +13,14 @@
 #include "DFRobot_GestureFaceDetection.h"
 DFRobot_GestureFaceDetection::DFRobot_GestureFaceDetection()
 {
+}
+bool DFRobot_GestureFaceDetection::begin()
+{
+    if (reaInputdReg(REG_GFD_PID) == GFD_PID)
+    {
+        return true;
+    }
+    return false;
 }
 uint16_t DFRobot_GestureFaceDetection::getPid()
 {
@@ -29,12 +37,25 @@ uint16_t DFRobot_GestureFaceDetection::getFaceNumber()
 }
 uint16_t DFRobot_GestureFaceDetection::configUart(eBaudConfig_t baud, eParityConfig_t parity, eStopbits_t stopBit)
 {
+    uint16_t ret = 0;
+    if(baud < eBaud_1200 || baud >= eBaud_MAX){
+        ret |= ERR_INVALID_BAUD;
+    }
+    if(parity < UART_CFG_PARITY_NONE || parity >= UART_CFG_PARITY_MAX){
+        ret |= ERR_INVALID_PARITY;
+    }
+    if(stopBit < UART_CFG_STOP_BITS_0_5 || stopBit >= UART_CFG_STOP_MAX){
+        ret |= ERR_INVALID_STOPBIT;
+    }
+    if(ret != 0){
+        return ret;
+    }
     uint16_t baudRate = baud;
 
     uint16_t verifyAndStop = ((uint16_t)parity << 8) | ((uint16_t)stopBit & 0xff);
-
-    writeIHoldingReg(REG_GFD_BAUDRATE, baudRate);
-    return writeIHoldingReg(REG_GFD_VERIFY_AND_STOP, verifyAndStop);
+    ret |= writeIHoldingReg(REG_GFD_BAUDRATE, baudRate)? SUCCESS : ERR_CONFIG_BUAD;
+    ret |= writeIHoldingReg(REG_GFD_VERIFY_AND_STOP, verifyAndStop)? SUCCESS: ERR_CONFIG_PARITY_STOPBIT;
+    return ret;
 }
 
 uint16_t DFRobot_GestureFaceDetection::getFaceLocationX()
@@ -62,21 +83,38 @@ uint16_t DFRobot_GestureFaceDetection::getGestureScore()
 
 bool DFRobot_GestureFaceDetection::setFaceDetectThres(uint16_t score)
 {
-
+    if (score > 100)
+    {
+        return false;
+    }
     return writeIHoldingReg(REG_GFD_FACE_SCORE_THRESHOLD, score);
 }
-
+uint16_t DFRobot_GestureFaceDetection::getFaceDetectThres()
+{
+    return readHoldingReg(REG_GFD_FACE_SCORE_THRESHOLD);
+}
 bool DFRobot_GestureFaceDetection::setDetectThres(uint16_t x)
 {
+    if (x > 100)
+    {
+        return false;
+    }
     return writeIHoldingReg(REG_GFD_FACE_THRESHOLD, x);
 }
-
+uint16_t DFRobot_GestureFaceDetection::getDetectThres(){
+    return readHoldingReg(REG_GFD_FACE_THRESHOLD);
+}
 bool DFRobot_GestureFaceDetection::setGestureDetectThres(uint16_t score)
 {
-
+    if (score > 100)
+    {
+        return false;
+    }
     return writeIHoldingReg(REG_GFD_GESTURE_SCORE_THRESHOLD, score);
 }
-
+uint16_t DFRobot_GestureFaceDetection::getGestureDetectThres(){
+    return readHoldingReg(REG_GFD_GESTURE_SCORE_THRESHOLD);
+}
 bool DFRobot_GestureFaceDetection::setDeviceAddr(uint16_t addr)
 {
     if ((addr == 0) || (addr > 0xF7))
@@ -92,10 +130,15 @@ DFRobot_GestureFaceDetection_UART::DFRobot_GestureFaceDetection_UART(Stream *s_,
     _addr = addr;
 }
 
+bool DFRobot_GestureFaceDetection_UART::begin()
+{
+    return DFRobot_GestureFaceDetection::begin();
+}
+
 uint16_t DFRobot_GestureFaceDetection_UART::reaInputdReg(uint16_t reg)
 {
     delay(20);
-    return readInputRegister(_addr, reg);
+    return readInputRegister(_addr, reg) ;
 }
 uint16_t DFRobot_GestureFaceDetection_UART::readHoldingReg(uint16_t reg)
 {
@@ -106,16 +149,10 @@ bool DFRobot_GestureFaceDetection_UART::writeIHoldingReg(uint16_t reg, uint16_t 
 {
 
     delay(20);
-    return writeHoldingRegister(_addr, reg, data);
-}
-bool DFRobot_GestureFaceDetection_UART::writeReg(uint16_t reg, uint16_t data)
-{
-    return true;
-}
-uint16_t DFRobot_GestureFaceDetection_UART::readReg(uint16_t reg)
-{
-    // readInputRegister(_addr,reg)
-    return 0;
+    uint16_t ret = writeHoldingRegister(_addr, reg, data);
+    Serial.print("Ret: ");
+    Serial.println(ret);
+    return ret == 0;
 }
 
 DFRobot_GestureFaceDetection_I2C::DFRobot_GestureFaceDetection_I2C(uint8_t addr)
@@ -130,7 +167,7 @@ bool DFRobot_GestureFaceDetection_I2C::begin(TwoWire *pWire)
     pWire->setClock(100000);
     pWire->begin();
     pWire->setClock(100000);
-    return true;
+    return DFRobot_GestureFaceDetection::begin();
 }
 uint8_t DFRobot_GestureFaceDetection_I2C::calculate_crc(const uint8_t *data, size_t length)
 {

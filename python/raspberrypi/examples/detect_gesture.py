@@ -2,11 +2,11 @@
   @file detect_gesture.py
   @brief Detect gestures
   @details  This code detects the location, score of faces, and gestures along with their scores.
-  @copyright   Copyright (c) 2024 DFRobot Co.Ltd (http://www.dfrobot.com)
+  @copyright   Copyright (c) 2025 DFRobot Co.Ltd (http://www.dfrobot.com)
   @license     The MIT license (MIT)
   @author [thdyyl](yuanlong.yu@dfrobot.com)
   @version  V1.0
-  @date  2025-03-17
+  @date  2025-03-31
   @https://github.com/DFRobot/DFRobot_GestureFaceDetection
 '''
 
@@ -36,19 +36,23 @@ def setup():
     """
     @brief Setup function for initializing sensor thresholds.
     
-    This function sets the thresholds for face detection and gesture detection.
+    This function gets the thresholds for face detection and gesture detection.
     """
+    # Wait for the sensor to start.
+    time.sleep(5)
+
+    while gfd.begin() == False:
+        print("Communication with device failed, please check connection")
+        time.sleep(1)
+
     # Set face detection score threshold (0~100)
-    gfd.set_face_detect_thres(60)
-    print("Face detection threshold set to 60.")
+    print("face detection threshold: {}".format(gfd.get_face_detect_thres()))
     
     # Set gesture detection score threshold (0~100)
-    gfd.set_gesture_detect_thres(60)
-    print("Gesture detection threshold set to 60.")
+    print("gesture detection threshold: {}".format(gfd.get_gesture_detect_thres()))
     
     # Set detection range, 0~100
-    gfd.set_detect_thres(100)
-    print("Detection range set to maximum.")
+    print("gesture detection range: {}".format(gfd.get_detect_thres()))
 
 def loop():
     """

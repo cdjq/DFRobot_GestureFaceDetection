@@ -2,7 +2,7 @@
  *@file DFRobot_GestureFaceDetection.h
  *@brief Define the basic structure of class DFRobot_GestureFaceDetection, the implementation of basic methods.
  *@details this module is used to identify the information in the QR code
- *@copyright   Copyright (c) 2024 DFRobot Co.Ltd (http://www.dfrobot.com)
+ *@copyright   Copyright (c) 2025 DFRobot Co.Ltd (http://www.dfrobot.com)
  *@License     The MIT License (MIT)
  *@author [thdyyl](yuanlong.yu@dfrobot.com)
  *@version  V1.0
@@ -37,6 +37,15 @@
 #define REG_GFD_FACE_SCORE_THRESHOLD    0x04    ///< Face score threshold
 #define REG_GFD_GESTURE_SCORE_THRESHOLD 0x05    ///< Gesture score threshold
 
+#define GFD_PID     0x0272  ///< Product ID
+// Error codes for UART configuration
+#define ERR_INVALID_BAUD            0x0001  ///< Invalid baud rate
+#define ERR_INVALID_PARITY          0x0002  ///< Invalid parity setting
+#define ERR_INVALID_STOPBIT         0x0004  ///< Invalid stop bit
+#define ERR_CONFIG_BUAD             0x0010  ///< Baud rate configuration failed.
+#define ERR_CONFIG_PARITY_STOPBIT   0x0020  ///< Failed to configure checksum and stop bit.
+#define SUCCESS                     0x0000  ///< Operation succeeded
+
 // GestureFaceDetection Data Register Addresses
 #define REG_GFD_PID                 0x00    ///< Product ID register
 #define REG_GFD_VID                 0x01    ///< Vendor ID register
@@ -67,6 +76,7 @@ typedef enum {
     eBaud_230400,       ///< Baud rate 230400
     eBaud_460800,       ///< Baud rate 460800
     eBaud_921600,       ///< Baud rate 921600
+    eBaud_MAX
 } eBaudConfig_t;
 
 /**
@@ -78,6 +88,7 @@ typedef enum {
     UART_CFG_PARITY_EVEN,      ///< Even parity
     UART_CFG_PARITY_MARK,      ///< Mark parity
     UART_CFG_PARITY_SPACE,     ///< Space parity
+    UART_CFG_PARITY_MAX,
 } eParityConfig_t;
 
 /**
@@ -88,6 +99,7 @@ typedef enum {
     UART_CFG_STOP_BITS_1,       ///< 1 stop bit
     UART_CFG_STOP_BITS_1_5,     ///< 1.5 stop bits
     UART_CFG_STOP_BITS_2,       ///< 2 stop bits
+    UART_CFG_STOP_MAX,
 } eStopbits_t;
 
 /**
@@ -99,6 +111,12 @@ public:
      * @brief Constructor for DFRobot_GestureFaceDetection.
      */
     DFRobot_GestureFaceDetection();
+
+    /**
+     * @brief Init function
+     * @return True if initialization is successful, otherwise false.
+     */
+    bool begin();
 
     /**
      * @brief Get the PID of the device.
@@ -153,6 +171,15 @@ public:
      *                - `UART_CFG_STOP_BITS_2`   - 2 stop bits
      *
      * @return Status of the configuration, returning the status code if the configuration is successful; otherwise, it returns an error code.
+     * @retval SUCCESS                     0x0000  ///< Operation succeeded
+     * @retval ERR_INVALID_BAUD            0x0001  ///< Invalid baud rate (bit 0)
+     * @retval ERR_INVALID_PARITY          0x0002  ///< Invalid parity setting (bit 1)
+     * @retval ERR_INVALID_STOPBIT         0x0004  ///< Invalid stop bit (bit 2)
+     * @retval ERR_CONFIG_BAUD             0x0010  ///< Hardware baud rate configuration failed (bit 4)
+     * @retval ERR_CONFIG_PARITY_STOPBIT   0x0020  ///< Failed to configure parity/stop bits (bit 5)
+     * 
+     * @note Errors can be combined via bitwise OR (e.g., 0x0003 = invalid baud + parity).
+     *       Check individual bits with `if (error & ERR_INVALID_BAUD)`.
      */
     uint16_t configUart(eBaudConfig_t baud, eParityConfig_t parity, eStopbits_t stopBit);
 
@@ -166,6 +193,8 @@ public:
      */
     bool setFaceDetectThres(uint16_t score);
     
+    uint16_t getFaceDetectThres();
+
     /**
      * @brief Set detection threshold for X coordinate.
      * 
@@ -175,6 +204,8 @@ public:
      * @return True if successful, otherwise false.
      */
     bool setDetectThres(uint16_t x);
+
+    uint16_t getDetectThres();
     
     /**
      * @brief Set gesture detection threshold.
@@ -186,7 +217,7 @@ public:
      */
     bool setGestureDetectThres(uint16_t score);
 
-
+    uint16_t getGestureDetectThres();
     /**
      * @brief Get the number of faces detected by the device.
      * @return Number of faces detected.
@@ -234,6 +265,7 @@ public:
      */
     uint16_t getGestureScore();
 
+private:
     /**
      * @brief Read input register.
      * @param reg Register address.
@@ -271,12 +303,10 @@ public:
      * @param addr Device address.
      */
     DFRobot_GestureFaceDetection_UART(Stream *s_, uint8_t addr);
-
+    bool begin();
     uint16_t reaInputdReg(uint16_t reg);
     uint16_t readHoldingReg(uint16_t reg);
     bool writeIHoldingReg(uint16_t reg, uint16_t data);
-    bool writeReg(uint16_t reg, uint16_t data);
-    uint16_t readReg(uint16_t reg);
 };
 
 /**

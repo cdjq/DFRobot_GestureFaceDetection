@@ -6,7 +6,7 @@ GestureFaceDetection is a sensor capable of tracking human head and shoulders an
 
 ![Product Image](../../resources/images/SEN0626svg.png)
 
-## Product Link（https://www.dfrobot.com/)
+## Product Link（https://www.dfrobot.com/product-2914.html)
     SEN0626:Gesture Sensor 
 ## Table of Contents
 
@@ -139,7 +139,7 @@ python get_pid_vid.py
 
 ## Credits
 
-Written by thdyyl(yuanlong.yu@dfrobot.com), 2025.03.17 (Welcome to our [website](https://www.dfrobot.com/product-2914.html))
+Written by thdyyl(yuanlong.yu@dfrobot.com), 2025.03.17 (Welcome to our [website](https://www.dfrobot.com/))
 
 
 

@@ -4,9 +4,9 @@
 
 GestureFaceDetection是一款可以在最远3米距离跟踪人体头肩和检测五种手势的传感器
 
-![正反面svg效果图](https://github.com/DFRobot/DFRobot_GestureFaceDetection/raw/master/resources/images/SEN0626svg.png)
+![正反面svg效果图](./resources/images/SEN0626svg.png)
 
-## 产品链接（https://www.dfrobot.com.cn/)
+## 产品链接（https://www.dfrobot.com/product-2914.html)
 
 SEN0626: GestureFaceDetection Sensor 手势传感器
 
@@ -199,6 +199,6 @@ Raspberry Pi      |      √       |              |             |
 
 ## 贡献者
 
-Written by thdyyl(yuanlong.yu@dfrobot.com), 2025.03.17 (Welcome to our [website](https://www.dfrobot.com/product-2914.html))
+Written by thdyyl(yuanlong.yu@dfrobot.com), 2025.03.17 (Welcome to our [website](https://www.dfrobot.com/))
 
 ## History

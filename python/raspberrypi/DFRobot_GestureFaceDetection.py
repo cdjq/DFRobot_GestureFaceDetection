@@ -2,7 +2,7 @@
 '''
   @file DFRobot_GestureFaceDetection.py
   @brief Define the basic structure and methods of the DFRobot_GestureFaceDetection class.
-  @copyright   Copyright (c) 2024 DFRobot Co.Ltd (http://www.dfrobot.com)
+  @copyright   Copyright (c) 2025 DFRobot Co.Ltd (http://www.dfrobot.com)
   @license     The MIT license (MIT)
   @author [thdyyl](yuanlong.yu@dfrobot.com)
   @version  V1.0
@@ -23,6 +23,8 @@ class DFRobot_GestureFaceDetection(object):
     REG_GFD_FACE_THRESHOLD = 0x0003             #< Face detection threshold, X coordinate
     REG_GFD_FACE_SCORE_THRESHOLD = 0x0004       #< Face score threshold
     REG_GFD_GESTURE_SCORE_THRESHOLD = 0x0005    #< Gesture score threshold
+
+    GFD_PID = 0x0272                            #< Product ID
 
     REG_GFD_PID = 0x0000                        #< Product ID register
     REG_GFD_VID = 0x0001                        #< Vendor ID register
@@ -68,6 +70,15 @@ class DFRobot_GestureFaceDetection(object):
         pass
 
     '''
+      @brief Init function
+      @return True if initialization is successful, otherwise false.
+    '''
+    def begin(self):
+        if self.readInputReg(self.REG_GFD_PID) == self.GFD_PID:
+            return True
+        return False
+
+    '''
       @brief Get the device PID
       @return Returns the device PID
     '''
@@ -87,20 +98,6 @@ class DFRobot_GestureFaceDetection(object):
     '''
     def get_face_number(self):
         return self.readInputReg(self.REG_GFD_FACE_NUMBER)
-
-    '''
-      @brief Configure UART
-      @param baud Baud rate
-      @param parity Parity bit
-      @param stop_bit Stop bits
-    '''
-    def config_uart(self, baud, parity, stop_bit):
-        # Combine parity and stop bits into a 16-bit value
-        verify_and_stop = (parity << 8) | (stop_bit & 0xff)
-        # Set baud rate
-        self.writeHoldingReg(self.REG_GFD_BAUDRATE, baud)
-        # Set parity and stop bits
-        return self.writeHoldingReg(self.REG_GFD_VERIFY_AND_STOP, verify_and_stop)
 
     '''
       @brief Get the X location of the face
@@ -148,7 +145,16 @@ class DFRobot_GestureFaceDetection(object):
       @param score Threshold score
     '''
     def set_face_detect_thres(self, score):
+        if (0 >= score) or (score > 100):
+            return False
         return self.writeHoldingReg(self.REG_GFD_FACE_SCORE_THRESHOLD, score)
+
+    '''
+      @brief Get the face detection threshold
+      @n Get the threshold for face detection (0-100). Default is 60%
+    '''
+    def get_face_detect_thres(self):
+        return self.readHoldingReg(self.REG_GFD_FACE_SCORE_THRESHOLD)
 
     '''
       @brief Set the face score threshold
@@ -156,7 +162,16 @@ class DFRobot_GestureFaceDetection(object):
       @param x Threshold value
     '''
     def set_detect_thres(self, x):
+        if (0 >= x) or (x > 100):
+            return False
         return self.writeHoldingReg(self.REG_GFD_FACE_THRESHOLD, x)
+
+    '''
+      @brief Get the face score threshold
+      @n Get the threshold for detecting the X coordinate (0-100). Default is 60%.
+    '''
+    def get_detect_thres(self):
+        return self.readHoldingReg(self.REG_GFD_FACE_THRESHOLD)
 
     '''
       @brief Set the gesture detection threshold
@@ -164,14 +179,23 @@ class DFRobot_GestureFaceDetection(object):
       @param score Threshold score
     '''
     def set_gesture_detect_thres(self, score):
+        if (0 >= score) or (score > 100):
+            return False
         return self.writeHoldingReg(self.REG_GFD_GESTURE_SCORE_THRESHOLD, score)
+
+    '''
+      @brief Get the gesture detection threshold
+      @n Get the threshold for gesture detection (0-100). Default is 60%.
+    '''
+    def get_gesture_detect_thres(self):
+        return self.readHoldingReg(self.REG_GFD_GESTURE_SCORE_THRESHOLD)
 
     '''
       @brief Set the device address
       @param addr Address to set
     '''
     def set_addr(self, addr):
-        if (addr == 0) or (addr > 0xF7):
+        if (addr < 1) or (addr > 0xF7):
             return False
         return self.writeHoldingReg(self.REG_GFD_ADDR, addr)
 
@@ -260,8 +284,23 @@ class DFRobot_GestureFaceDetection_UART(DFRobot_GestureFaceDetection, DFRobot_RT
         DFRobot_GestureFaceDetection.__init__(self)
         DFRobot_RTU.__init__(self, baud, 8, 'N', 1)
 
+    '''
+      @brief Configure UART
+      @param baud Baud rate
+      @param parity Parity bit
+      @param stop_bit Stop bits
+    '''
+    def config_uart(self, baud, parity, stop_bit):
+        # Combine parity and stop bits into a 16-bit value
+        verify_and_stop = (parity << 8) | (stop_bit & 0xff)
+        # Set baud rate
+        self.writeHoldingReg(self.REG_GFD_BAUDRATE, baud)
+        # Set parity and stop bits
+        return self.writeHoldingReg(self.REG_GFD_VERIFY_AND_STOP, verify_and_stop)
+
     def writeHoldingReg(self, reg, data):
-        return self.write_holding_register(self.__addr, reg, data)
+        ret = self.write_holding_register(self.__addr, reg, data)
+        return ret == 0
 
     def readInputReg(self, reg):
         try:
@@ -279,4 +318,15 @@ class DFRobot_GestureFaceDetection_UART(DFRobot_GestureFaceDetection, DFRobot_RT
             return 0
     
     def readHoldingReg(self, reg):
-        return self.read_holding_registers(self.__addr, reg, 1)
+        try:
+            data = self.read_holding_registers(self.__addr, reg, 1)
+            
+            # Ensure data list has at least three elements
+            if len(data) >= 3:
+                regData = (data[1] << 8) | data[2]
+            else:
+                regData = 0
+            
+            return regData
+        except Exception as e:
+            return 0
