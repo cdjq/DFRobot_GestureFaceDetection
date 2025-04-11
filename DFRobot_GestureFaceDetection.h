@@ -6,7 +6,7 @@
  *@License     The MIT License (MIT)
  *@author [thdyyl](yuanlong.yu@dfrobot.com)
  *@version  V1.0
- *@date  2025-03-17
+ *@date  2025-04-07
  *@https://github.com/DFRobot/DFRobot_GestureFaceDetection
 */
 
@@ -142,12 +142,13 @@ public:
      * 
      * This method is used to set the UART communication parameters for the device, including baud rate, parity, and stop bits. 
      * Users can choose the appropriate parameters based on their needs to ensure stable and effective communication with the device.
+     * !!!However, the current CSK6 chip's serial port only supports changing the baud rate, and the stop and check bits should be set to default.
      *
      * @param baud Baud rate configuration, of type `eBaudConfig_t`, with possible values including:
      *              - `eBaud_1200`  - 1200 baud
      *              - `eBaud_2400`  - 2400 baud
      *              - `eBaud_4800`  - 4800 baud
-     *              - `eBaud_9600`  - 9600 baud
+     *              - `eBaud_9600`  - 9600 baud  (Default)
      *              - `eBaud_14400` - 14400 baud
      *              - `eBaud_19200` - 19200 baud
      *              - `eBaud_38400` - 38400 baud
@@ -158,7 +159,7 @@ public:
      *              - `eBaud_921600`- 921600 baud
      *
      * @param parity Parity configuration, of type `eParityConfig_t`, with possible values including:
-     *              - `UART_CFG_PARITY_NONE`  - No parity
+     *              - `UART_CFG_PARITY_NONE`  - No parity (Default)
      *              - `UART_CFG_PARITY_ODD`   - Odd parity
      *              - `UART_CFG_PARITY_EVEN`  - Even parity
      *              - `UART_CFG_PARITY_MARK`  - Mark parity
@@ -166,7 +167,7 @@ public:
      *
      * @param stopBit Stop bits configuration, of type `eStopbits_t`, with possible values including:
      *                - `UART_CFG_STOP_BITS_0_5` - 0.5 stop bits
-     *                - `UART_CFG_STOP_BITS_1`   - 1 stop bit
+     *                - `UART_CFG_STOP_BITS_1`   - 1 stop bit  (Default)
      *                - `UART_CFG_STOP_BITS_1_5` - 1.5 stop bits
      *                - `UART_CFG_STOP_BITS_2`   - 2 stop bits
      *
@@ -193,6 +194,14 @@ public:
      */
     bool setFaceDetectThres(uint16_t score);
     
+    /**
+     * @brief Get face detection threshold.
+     *
+     * Gets the threshold for face detection (0-100). Default is 60%.
+     * 
+     * @return uint16_t The threshold value.
+     * @note The threshold value is a percentage (0-100).
+     */
     uint16_t getFaceDetectThres();
 
     /**
@@ -205,6 +214,13 @@ public:
      */
     bool setDetectThres(uint16_t x);
 
+    /**
+     * @brief Get the Detect Thres object
+     * 
+     * Gets the threshold for detecting the X coordinate (0-100). Default is 60%.
+     * 
+     * @return uint16_t 
+     */
     uint16_t getDetectThres();
     
     /**
@@ -217,6 +233,13 @@ public:
      */
     bool setGestureDetectThres(uint16_t score);
 
+    /**
+     * @brief Get the Gesture Detect Thres object
+     * 
+     * Gets the threshold for gesture detection (0-100). Default is 60%.
+     * 
+     * @return uint16_t 
+     */
     uint16_t getGestureDetectThres();
     /**
      * @brief Get the number of faces detected by the device.
@@ -239,8 +262,10 @@ public:
     /**
      * @brief Get the score of the detected face.
      * @return Score of the face.
+     * @note The score is a value between 0 and 100, indicating the confidence of the face detection.
+     *       Higher values indicate a higher confidence in the detection.
      */
-    uint16_t getFaceScore();  
+     uint16_t getFaceScore();
 
     /**
      * @brief Get the type of detected gesture.
@@ -261,9 +286,11 @@ public:
 
     /**
      * @brief Get the score of the detected gesture.
-     * @return Gesture score.
+     * @return Score of the gesture.
+     * @note The score is a value between 0 and 100, indicating the confidence of the gesture detection.
      */
     uint16_t getGestureScore();
+
 
 private:
     /**

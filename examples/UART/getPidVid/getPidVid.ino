@@ -27,8 +27,6 @@
 #include <SoftwareSerial.h>
 SoftwareSerial mySerial1(4, 5);
 DFRobot_GestureFaceDetection_UART gfd(&mySerial1, DEVICE_ID);
-#elif defined(ESP32)
-DFRobot_GestureFaceDetection_UART gfd(&Serial1, DEVICE_ID, D2, D3);
 #else
 // Create an instance of DFRobot_GestureFaceDetection_UART with the specified device ID and Serial1 for UART communicatio
 DFRobot_GestureFaceDetection_UART gfd(&Serial1, DEVICE_ID);

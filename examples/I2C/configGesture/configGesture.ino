@@ -2,6 +2,7 @@
  *@file configGesture.ino
  *@brief Config gestures
  *@details  This code configure the position, score of faces, and gestures along with their scores. It interacts with the DFRobot GestureFaceDetection sensor to perform face and gesture detection and display the results.
+ *@details  The configuration needs to be powered off to take effect.
  *@copyright   Copyright (c) 2025 DFRobot Co.Ltd (http://www.dfrobot.com)
  *@license     The MIT license (MIT)
  *@author [thdyyl](yuanlong.yu@dfrobot.com)
@@ -37,7 +38,7 @@ void setup() {
   }
   // Set the face detection threshold. Face scores range from 0 to 100.
   // Faces with scores above this threshold will be detected.
-  if (gfd.setFaceDetectThres(70)) {
+  if (gfd.setFaceDetectThres(60)) {
     Serial.println("Set the face detection threshold success.");
   } else {
     Serial.println("Set the face detection threshold fail.");

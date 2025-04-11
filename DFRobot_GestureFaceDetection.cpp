@@ -6,7 +6,7 @@
  *@License     The MIT License (MIT)
  *@author [thdyyl](yuanlong.yu@dfrobot.com)
  *@version  V1.0
- *@date  2025-03-17
+ *@date  2025-04-02
  *@https://github.com/DFRobot/DFRobot_GestureFaceDetection
  */
 
@@ -41,10 +41,10 @@ uint16_t DFRobot_GestureFaceDetection::configUart(eBaudConfig_t baud, eParityCon
     if(baud < eBaud_1200 || baud >= eBaud_MAX){
         ret |= ERR_INVALID_BAUD;
     }
-    if(parity < UART_CFG_PARITY_NONE || parity >= UART_CFG_PARITY_MAX){
+    if(static_cast<uint8_t>(parity) >= UART_CFG_PARITY_MAX){
         ret |= ERR_INVALID_PARITY;
     }
-    if(stopBit < UART_CFG_STOP_BITS_0_5 || stopBit >= UART_CFG_STOP_MAX){
+    if(static_cast<uint8_t>(stopBit) >= UART_CFG_STOP_MAX){
         ret |= ERR_INVALID_STOPBIT;
     }
     if(ret != 0){
@@ -150,8 +150,8 @@ bool DFRobot_GestureFaceDetection_UART::writeIHoldingReg(uint16_t reg, uint16_t 
 
     delay(20);
     uint16_t ret = writeHoldingRegister(_addr, reg, data);
-    Serial.print("Ret: ");
-    Serial.println(ret);
+    LDBG(ret);
+
     return ret == 0;
 }
 
@@ -204,23 +204,24 @@ bool DFRobot_GestureFaceDetection_I2C::writeReg(uint16_t reg, uint16_t data)
     do
     {
         _pWire->beginTransmission(_addr);
-        _pWire->write((uint8_t)(reg >> 8)); // 检查ACK
+        _pWire->write((uint8_t)(reg >> 8));
         _pWire->write((uint8_t)(reg & 0xFF));
         _pWire->write((uint8_t)(data >> 8));
         _pWire->write((uint8_t)(data & 0xFF));
         _pWire->write(crc);
         uint8_t i2c_error = _pWire->endTransmission();
-
         if (i2c_error != 0)
         {
             retry++;
             delay(10);
             continue;
         }
+        #if defined(ESP32)
+        delay(70);
+        #else
         delay(5);
-
+        #endif
         uint8_t bytes_read = _pWire->requestFrom(_addr, (uint8_t)3);
-
         if (bytes_read != 3)
         {
             retry++;

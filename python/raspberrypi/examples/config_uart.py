@@ -52,12 +52,15 @@ def setup():
         print("I2C setup complete.")
     else:
         # Configure UART communication
-        gfd.config_uart(baud=gfd.EBAUD_115200, parity=gfd.UART_CFG_PARITY_NONE, stop_bit=gfd.UART_CFG_STOP_BITS_2)
-        print("UART configured.")
+        if gfd.config_uart(baud=gfd.EBAUD_115200, parity=gfd.UART_CFG_PARITY_NONE, stop_bit=gfd.UART_CFG_STOP_BITS_1) == gfd.SUCCESS:
+            print("UART configured success.")
+        else:
+            print("UART configuration failed.")
         # Set the device address
-        gfd.set_addr(NEW_DEVICE_ID)
-        print("Device address set to: 0x{:x}".format(NEW_DEVICE_ID))
-
+        if gfd.set_addr(NEW_DEVICE_ID):
+            print("Device address set to: 0x{:x}".format(NEW_DEVICE_ID))
+        else:
+            print("Failed to set device address.")
 # Execute the setup function
 setup()
 

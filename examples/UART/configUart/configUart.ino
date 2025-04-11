@@ -2,6 +2,7 @@
  *@file configUart.ino
  *@brief Configure sensor parameters
  *@details  This code configures the sensor's address and serial communication parameters.
+ *@details  The configuration needs to be powered off to take effect.
  *@copyright   Copyright (c) 2025 DFRobot Co.Ltd (http://www.dfrobot.com)
  *@license     The MIT license (MIT)
  *@author [thdyyl](yuanlong.yu@dfrobot.com)
@@ -14,7 +15,7 @@
 
 // Define the device ID for the GestureFaceDetection sensor
 #define DEVICE_ID 0x72
-#define DEVICE_BAUD 115200
+#define DEVICE_BAUD 9600
 
 /* ---------------------------------------------------------------------------------------------------------------------
   *    board   |             MCU                | Leonardo/Mega2560/M0 |    UNO    | ESP8266 | ESP32 |  microbit  |   m0  |
@@ -49,8 +50,12 @@ void setup() {
   // Initialize serial communication for debugging purposes
   Serial.begin(115200);
 
+  while (!gfd.begin()) {
+    Serial.println("Communication with device failed, please check connection");
+    delay(1000);
+  }
   // Configure the UART settings of the sensor
-  uint16_t ret = gfd.configUart(eBaud_9600, UART_CFG_PARITY_NONE, UART_CFG_STOP_BITS_1_5);
+  uint16_t ret = gfd.configUart(eBaud_115200, UART_CFG_PARITY_NONE, UART_CFG_STOP_BITS_1);
   if (ret == SUCCESS) {
     Serial.println("Configure the UART settings of the sensor success.");
   } else {

@@ -62,7 +62,7 @@ SEN0626: GestureFaceDetection Sensor 手势传感器
      *              - `eBaud_1200`  - 1200波特
      *              - `eBaud_2400`  - 2400波特
      *              - `eBaud_4800`  - 4800波特
-     *              - `eBaud_9600`  - 9600波特
+     *              - `eBaud_9600`  - 9600波特 (默认值)
      *              - `eBaud_14400` - 14400波特
      *              - `eBaud_19200` - 19200波特
      *              - `eBaud_38400` - 38400波特
@@ -73,7 +73,7 @@ SEN0626: GestureFaceDetection Sensor 手势传感器
      *              - `eBaud_921600`- 921600波特
      *
      * @param parity 校验位配置，类型为`eParityConfig_t`，可能的值包括：
-     *              - `UART_CFG_PARITY_NONE`  - 无校验
+     *              - `UART_CFG_PARITY_NONE`  - 无校验 （默认值）
      *              - `UART_CFG_PARITY_ODD`   - 奇校验
      *              - `UART_CFG_PARITY_EVEN`  - 偶校验
      *              - `UART_CFG_PARITY_MARK`  - 标记校验
@@ -81,7 +81,7 @@ SEN0626: GestureFaceDetection Sensor 手势传感器
      *
      * @param stopBit 停止位配置，类型为`eStopbits_t`，可能的值包括：
      *                - `UART_CFG_STOP_BITS_0_5` - 0.5停止位
-     *                - `UART_CFG_STOP_BITS_1`   - 1停止位
+     *                - `UART_CFG_STOP_BITS_1`   - 1停止位 （默认值）
      *                - `UART_CFG_STOP_BITS_1_5` - 1.5停止位
      *                - `UART_CFG_STOP_BITS_2`   - 2停止位
      *
@@ -121,6 +121,35 @@ SEN0626: GestureFaceDetection Sensor 手势传感器
      * @return 如果成功，返回真；否则返回假。
      */
     bool setGestureDetectThres(uint16_t score);
+
+    /**
+     * @fn getFaceDetectThres
+     * @brief 该函数用于获取设备的人脸检测阈值。
+     * @details 该阈值的范围为0-100，其中0表示关闭人脸检测功能，100表示最大检测阈值。默认值为60%。
+     * 
+     * @return uint16_t 人脸检测阈值。 
+     */
+    uint16_t getFaceDetectThres();
+
+    /**
+     * @fn getDetectThres 
+     * @brief 获取X坐标的检测阈值。
+     * 
+     * 获取检测X坐标的阈值（0-100）。默认值为60%。
+     * 
+     * @return uint16_t  X坐标的检测阈值。
+     */
+    uint16_t getDetectThres();
+    
+    /**
+     * @fn getGestureDetectThres
+     * @brief   获取手势检测阈值。
+     * 
+     * 获取手势检测的阈值（0-100）。默认值为60%。
+     * 
+     * @return uint16_t 
+     */
+    uint16_t getGestureDetectThres();
     
     /**
      * @fn getFaceNumber

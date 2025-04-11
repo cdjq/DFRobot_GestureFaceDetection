@@ -64,7 +64,6 @@ void setup() {
   Serial.println(gfd.getDetectThres());
 }
 
-
 void loop() {
   // Check if any faces are detected
   if (gfd.getFaceNumber() > 0) {

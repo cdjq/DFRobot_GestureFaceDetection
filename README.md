@@ -60,12 +60,12 @@ Provide an Arduino library to control
      * 
      * This method is used to set the UART communication parameters for the device, including baud rate, parity, and stop bits. 
      * Users can choose the appropriate parameters based on their needs to ensure stable and effective communication with the device.
-     *
+     *!!!However, the current CSK6 chip's serial port only supports changing the baud rate, and the stop and check bits should be set to default.
      * @param baud Baud rate configuration, of type `eBaudConfig_t`, with possible values including:
      *              - `eBaud_1200`  - 1200 baud
      *              - `eBaud_2400`  - 2400 baud
      *              - `eBaud_4800`  - 4800 baud
-     *              - `eBaud_9600`  - 9600 baud
+     *              - `eBaud_9600`  - 9600 baud （Default）
      *              - `eBaud_14400` - 14400 baud
      *              - `eBaud_19200` - 19200 baud
      *              - `eBaud_38400` - 38400 baud
@@ -76,7 +76,7 @@ Provide an Arduino library to control
      *              - `eBaud_921600`- 921600 baud
      *
      * @param parity Parity configuration, of type `eParityConfig_t`, with possible values including:
-     *              - `UART_CFG_PARITY_NONE`  - No parity
+     *              - `UART_CFG_PARITY_NONE`  - No parity （Default）
      *              - `UART_CFG_PARITY_ODD`   - Odd parity
      *              - `UART_CFG_PARITY_EVEN`  - Even parity
      *              - `UART_CFG_PARITY_MARK`  - Mark parity
@@ -84,7 +84,7 @@ Provide an Arduino library to control
      *
      * @param stopBit Stop bits configuration, of type `eStopbits_t`, with possible values including:
      *                - `UART_CFG_STOP_BITS_0_5` - 0.5 stop bits
-     *                - `UART_CFG_STOP_BITS_1`   - 1 stop bit
+     *                - `UART_CFG_STOP_BITS_1`   - 1 stop bit （Default）
      *                - `UART_CFG_STOP_BITS_1_5` - 1.5 stop bits
      *                - `UART_CFG_STOP_BITS_2`   - 2 stop bits
      *
@@ -125,6 +125,36 @@ Provide an Arduino library to control
      */
     bool setGestureDetectThres(uint16_t score);
 
+    /**
+     * @fn getFaceDetectThres
+     * @brief Get face detection threshold.
+     *
+     * Gets the threshold for face detection (0-100). Default is 60%.
+     * 
+     * @return uint16_t The threshold value.
+     * @note The threshold value is a percentage (0-100).
+     */
+    uint16_t getFaceDetectThres();
+
+    /**
+     * @fn getDetectThres
+     * @brief Get the Detect Thres object
+     * 
+     * Gets the threshold for detecting the X coordinate (0-100). Default is 60%.
+     * 
+     * @return uint16_t 
+     */
+    uint16_t getDetectThres();
+    
+    /**
+     * @fn getGestureDetectThres
+     * @brief Get the Gesture Detect Thres object
+     * 
+     * Gets the threshold for gesture detection (0-100). Default is 60%.
+     * 
+     * @return uint16_t 
+     */
+    uint16_t getGestureDetectThres();
 
     /**
      * @fn getFaceNumber
