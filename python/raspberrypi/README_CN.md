@@ -26,7 +26,15 @@ GestureFaceDetection是一款可以在最远3米距离跟踪人体头肩和检�
 
 ## 安装
 
-要使用这个库，首先将库下载到Raspberry Pi 并下载smbus2，然后打开用例文件夹。要执行一个用例demox.py，请在命令行中输入python demox.py。例如，要执行get_pid_vid.py用例，你需要输入：
+要使用这个库，首先将库下载到Raspberry Pi 并下载smbus2
+
+```
+pip install smbus2
+pip3 install smbus2
+```
+
+然后打开用例文件夹。要执行一个用例demox.py，请在命令行中输入python demox.py。例如，要执行get_pid_vid.py用例，你需要输入：
+
 ```
 python get_pid_vid.py
 ```

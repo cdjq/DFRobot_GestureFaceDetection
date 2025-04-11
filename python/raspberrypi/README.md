@@ -23,7 +23,15 @@ Provide an Arduino library to control
 
 ## Installation
 
-To use this library, first download it to Raspberry Pi and download smbus2, then open the use case folder. To execute a use case demox.py, enter python demox.py in the command line. For example, to execute the getypid_vid. py use case, you need to input:
+To use this library, first download it to Raspberry Pi and download smbus2
+
+```
+pip install smbus2
+pip3 install smbus2
+```
+
+then open the use case folder. To execute a use case demox.py, enter python demox.py in the command line. For example, to execute the getypid_vid. py use case, you need to input:
+
 ```
 python get_pid_vid.py
 ```
